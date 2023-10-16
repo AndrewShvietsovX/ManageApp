@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @Query("SELECT o FROM Order o WHERE o.isPaid = :paid AND o.createdTime < :time")
-    List<Order> findUnpaidOrdersCreatedBefore(@Param("paid") boolean paid, @Param("time") LocalDateTime time);
+    @Query("SELECT o FROM Order o WHERE o.createdTime < :time")
+    List<Order> findOrdersCreatedBefore(@Param("time") LocalDateTime time);
 }

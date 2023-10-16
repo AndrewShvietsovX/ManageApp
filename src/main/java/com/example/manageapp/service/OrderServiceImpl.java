@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -33,7 +34,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteUnpaidOrders() {
         LocalDateTime tenMinutesAgo = LocalDateTime.now().minusMinutes(10);
-        List<Order> unpaidOrders = orderRepository.findUnpaidOrdersCreatedBefore(false, tenMinutesAgo);
+        List<Order> allOrders = orderRepository.findOrdersCreatedBefore(tenMinutesAgo);
+        List<Order> unpaidOrders = allOrders.stream()
+                .filter(order -> !order.isPaid())
+                .collect(Collectors.toList());
+
         orderRepository.deleteAll(unpaidOrders);
     }
 
